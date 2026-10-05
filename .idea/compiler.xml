@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ADTGraph_Example_Template" />
+        <module name="ADTGraph_parte1" />
       </profile>
     </annotationProcessing>
   </component>

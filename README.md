@@ -127,22 +127,6 @@ Preencham o modelo em `docs/ATIVIDADE.md`:
 
 A documentação Javadoc da interface `Graph` está disponível em [`docs/graph-javadoc/Graph.html`](docs/graph-javadoc/Graph.html).
 O ficheiro fonte correspondente está em [`docs/graph-javadoc/Graph.java`](docs/graph-javadoc/Graph.java).
-
-| Operação | Resultado ou comportamento |
-|---|---|
-| `numVertices()` / `numEdges()` | Número de vértices / arestas |
-| `vertices()` / `edges()` | Referências dos vértices / arestas, sem ordem garantida |
-| `incidentEdges(v)` | Arestas incidentes em `v` |
-| `opposite(v,e)` | Outro extremo de `e`, se `v` for um extremo |
-| `areAdjacent(u,v)` | Existe uma aresta entre `u` e `v` |
-| `insertVertex(element)` | Insere e devolve a referência do vértice |
-| `insertEdge(u,v,element)` | Insere e devolve a referência da aresta |
-| `removeVertex(v)` | Remove vértice e arestas incidentes, devolve o elemento |
-| `removeEdge(e)` | Remove aresta e devolve o elemento |
-| `replace(v,element)` / `replace(e,element)` | Substitui o elemento e devolve o anterior |
-
-`element()` pertence a `Vertex` e `Edge`. Referências de outra instância ou removidas
-provocam `IllegalArgumentException` nas operações do grafo. A implementação fornecida
-aceita arestas paralelas e rejeita laços. A aplicação do metro acrescenta a regra
-que impede ligações paralelas. A representação interna será tema de A3.4.
+A implementação fornecida aceita arestas paralelas e rejeita laços. A aplicação do metro acrescenta a regra
+que impede ligações paralelas. A representação interna será tema da aula A3.4.
 
