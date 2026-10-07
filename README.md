@@ -16,7 +16,7 @@ Não é pedido o planeamento de outra aplicação nesta atividade.
 
 - Java 17 ou superior e Maven, ou um IDE com suporte Maven.
 - Biblioteca SmartGraph 2.2.0, declarada em `pom.xml`; utilizem `Graph`, `Vertex`, `Edge` e `GraphEdgeList`.
-- Podem utilizar `List` e `ArrayList` para reunir os nomes dos vizinhos e `Locale.ROOT` para normalizar nomes.
+- Podem utilizar `List` e `ArrayList` para reunir os nomes dos vizinhos e `Locale.ROOT` para normalizar nomes obtidos por `Station#getName()`.
 - Não é necessário implementar o ADT Graph ou estudar a sua estrutura interna nesta aula.
 
 | Ficheiro | Responsabilidade | Estado inicial |
@@ -90,7 +90,7 @@ A validação do domínio é centralizada em `MetroNetworkImpl`.
 | `directTravelMinutes` (a acrescentar) | localizar vértices, `incidentEdges`, `opposite`, `element` |
 
 `findStation` recebe um nome já normalizado e devolve o vértice ou `null`.
-`requireStation` valida e normaliza o nome, pesquisa a estação e lança a exceção se não existir.
+`checkStation` valida a `Station`, normaliza o seu nome, pesquisa a estação e lança a exceção se não existir.
 
 ## 1. Explorar a solução
 
@@ -121,7 +121,7 @@ Utilizem `addStation` e `connectStations`. Acrescentem estas chamadas **depois d
 ligações iniciais e antes das instruções que apresentam os resultados**. Registem
 Roma antes de criar as suas ligações.
 
-Acrescentem também uma consulta a `neighbouringStations("Roma")` e voltem a executar `Main`.
+Acrescentem também uma consulta a `neighbouringStations(new Station("Roma"))` e voltem a executar `Main`.
 
 Verifiquem que:
 
@@ -135,8 +135,8 @@ outras ligações, mas corresponde a um objeto `Connection` distinto.
 
 ## 2. Completar `hasDirectConnection`
 
-Mantenham a assinatura da interface. Validem e localizem os dois vértices antes de usar `areAdjacent`.
-Podem reutilizar `requireStation`. Substituam o lançamento de `UnsupportedOperationException` pela implementação.
+Mantenham a assinatura da interface com parâmetros `Station`. Validem e localizem os dois vértices antes de usar `areAdjacent`.
+Podem reutilizar `checkStation`. Substituam o lançamento de `UnsupportedOperationException` pela implementação.
 Depois, ativem as três chamadas comentadas em `Main`.
 
 | Consulta | Resultado esperado |
@@ -153,11 +153,11 @@ Depois, ativem as três chamadas comentadas em `Main`.
 Acrescentem a assinatura a `MetroNetwork` e implementem-na em `MetroNetworkImpl`:
 
 ```java
-int directTravelMinutes(String origin, String destination)
+int directTravelMinutes(Station origin, Station destination)
     throws InvalidMetroException;
 ```
 
-**Contrato:** devolver o tempo da ligação direta; lançar `InvalidMetroException` para nomes inválidos,
+**Contrato:** devolver o tempo da ligação direta; lançar `InvalidMetroException` para estações inválidas,
 estações inexistentes ou ausência de ligação direta, incluindo a consulta da estação a si própria.
 O resultado é igual nos dois sentidos. Não é pedido um algoritmo de caminho mais curto.
 
@@ -169,10 +169,10 @@ individualmente para a execução poder continuar.
 | --- | --- |
 | Alameda–Arroios | `2` |
 | Arroios–Alameda | `2` |
-| `" alameda "`–`"ARROIOS"` | `2` |
+| `new Station(" alameda ")`–`new Station("ARROIOS")` | `2` |
 | Alameda–Campo Grande | Exceção, mesmo existindo um percurso |
 | Alameda–Aeroporto | Exceção |
-| Nome inexistente, vazio ou `null` | Exceção |
+| Estação inexistente, nome vazio ou `null` | Exceção |
 | Alameda–Alameda | Exceção |
 
 ## Critérios de conclusão

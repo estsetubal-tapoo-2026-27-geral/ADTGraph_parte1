@@ -37,26 +37,32 @@ public final class MetroNetworkImpl implements MetroNetwork {
         return null;
     }
     /**
-     * Validates and normalises the station name, then retrieves its vertex.
+     * Validates the station, normalises its name, then retrieves its vertex.
      *
-     * @param name the station name, ignoring case and surrounding spaces
+     * @param station the station, using its name and ignoring case and surrounding spaces
      * @return the vertex containing the existing station
-     * @throws InvalidMetroException if the name is null or empty after trimming,
+     * @throws InvalidMetroException if the station is null, its name is empty after trimming,
      *                               or the station does not exist
      */
-    private Vertex<Station> checkStation(String name) {
-        String normalisedName = normaliseName(name);
+    private Vertex<Station> checkStation(Station station) {
+        if (station == null) {
+            throw new InvalidMetroException("Invalid station.");
+        }
+        String normalisedName = normaliseName(station.getName());
         Vertex<Station> vertex = findStation(normalisedName);
         if (vertex == null) {
-            throw new InvalidMetroException("Unknown station: " + name);
+            throw new InvalidMetroException("Unknown station: " + station.getName());
         }
         return vertex;
     }
 
 
     @Override
-    public void addStation(String name) throws InvalidMetroException {
-        String normalisedName = normaliseName(name);
+    public void addStation(Station station) throws InvalidMetroException {
+        if (station == null) {
+            throw new InvalidMetroException("Invalid station.");
+        }
+        String normalisedName = normaliseName(station.getName());
         if (findStation(normalisedName) != null) {
             throw new InvalidMetroException("Station already exists.");
         }
@@ -65,7 +71,7 @@ public final class MetroNetworkImpl implements MetroNetwork {
 
 
     @Override
-    public void connectStations(String origin, String destination, int travelMinutes)
+    public void connectStations(Station origin, Station destination, int travelMinutes)
             throws InvalidMetroException {
         Vertex<Station> first = checkStation(origin);
         Vertex<Station> second = checkStation(destination);
@@ -84,16 +90,16 @@ public final class MetroNetworkImpl implements MetroNetwork {
 
 
     @Override
-    public boolean hasDirectConnection(String origin, String destination)
+    public boolean hasDirectConnection(Station origin, Station destination)
             throws InvalidMetroException {
-        // TODO: resolve both names and call graph.areAdjacent(...).
-        // Existing stations without an edge must produce false.
-        throw new UnsupportedOperationException("TODO: implement hasDirectConnection.");
+        Vertex<Station> first = checkStation(origin);
+        Vertex<Station> second = checkStation(destination);
+        return first != second && graph.areAdjacent(first, second);
     }
 
 
     @Override
-    public Iterable<String> neighbouringStations(String station) throws InvalidMetroException {
+    public Iterable<String> neighbouringStations(Station station) throws InvalidMetroException {
         Vertex<Station> vertex = checkStation(station);
         List<String> result = new ArrayList<>();
         for (Edge<Connection, Station> edge : graph.incidentEdges(vertex)) {
