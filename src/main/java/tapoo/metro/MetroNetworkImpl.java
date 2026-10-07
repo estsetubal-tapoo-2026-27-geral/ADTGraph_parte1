@@ -4,15 +4,22 @@ import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Graph;
 import com.brunomnsilva.smartgraph.graph.GraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Vertex;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/** Domain operations implemented using the Graph ADT. */
+/**
+ * {@link MetroNetwork} implementation backed by the SmartGraph graph ADT.
+ *
+ * <p>Vertices store {@link Station} objects and edges store {@link Connection}
+ * objects. All validation and name normalisation for the metro domain is
+ * centralised in this class.</p>
+ */
 public final class MetroNetworkImpl implements MetroNetwork {
     private final Graph<Station, Connection> graph = new GraphEdgeList<>();
 
-    /** Apply the same validation and normalisation in every operation. */
+
     private String normaliseName(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new InvalidMetroException("Invalid station name.");
@@ -20,25 +27,32 @@ public final class MetroNetworkImpl implements MetroNetwork {
         return name.trim().toUpperCase(Locale.ROOT);
     }
 
-    /** Receives an already validated and normalised name. */
+
     private Vertex<Station> findStation(String name) {
         for (Vertex<Station> vertex : graph.vertices()) {
-            if (vertex.element().getName().equals(name)) {
+            if (vertex.element().getName().equalsIgnoreCase(name)) {
                 return vertex;
             }
         }
         return null;
     }
-
-    /** Resolve a name to a vertex or report a domain error. */
-    private Vertex<Station> requireStation(String name) {
+    /**
+     * Validates and normalises the station name, then retrieves its vertex.
+     *
+     * @param name the station name, ignoring case and surrounding spaces
+     * @return the vertex containing the existing station
+     * @throws InvalidMetroException if the name is null or empty after trimming,
+     *                               or the station does not exist
+     */
+    private Vertex<Station> checkStation(String name) {
         String normalisedName = normaliseName(name);
         Vertex<Station> vertex = findStation(normalisedName);
         if (vertex == null) {
-            throw new InvalidMetroException("Unknown station: " + normalisedName);
+            throw new InvalidMetroException("Unknown station: " + name);
         }
         return vertex;
     }
+
 
     @Override
     public void addStation(String name) throws InvalidMetroException {
@@ -49,11 +63,12 @@ public final class MetroNetworkImpl implements MetroNetwork {
         graph.insertVertex(new Station(normalisedName));
     }
 
+
     @Override
     public void connectStations(String origin, String destination, int travelMinutes)
             throws InvalidMetroException {
-        Vertex<Station> first = requireStation(origin);
-        Vertex<Station> second = requireStation(destination);
+        Vertex<Station> first = checkStation(origin);
+        Vertex<Station> second = checkStation(destination);
         if (first == second) {
             throw new InvalidMetroException("Stations must be different.");
         }
@@ -67,6 +82,7 @@ public final class MetroNetworkImpl implements MetroNetwork {
         graph.insertEdge(first, second, new Connection(travelMinutes));
     }
 
+
     @Override
     public boolean hasDirectConnection(String origin, String destination)
             throws InvalidMetroException {
@@ -75,9 +91,10 @@ public final class MetroNetworkImpl implements MetroNetwork {
         throw new UnsupportedOperationException("TODO: implement hasDirectConnection.");
     }
 
+
     @Override
     public Iterable<String> neighbouringStations(String station) throws InvalidMetroException {
-        Vertex<Station> vertex = requireStation(station);
+        Vertex<Station> vertex = checkStation(station);
         List<String> result = new ArrayList<>();
         for (Edge<Connection, Station> edge : graph.incidentEdges(vertex)) {
             Vertex<Station> neighbour = graph.opposite(vertex, edge);
@@ -86,6 +103,9 @@ public final class MetroNetworkImpl implements MetroNetwork {
         return result;
     }
 
+
     @Override
-    public int numberOfStations() { return graph.numVertices(); }
+    public int numberOfStations() {
+        return graph.numVertices();
+    }
 }

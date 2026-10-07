@@ -1,6 +1,15 @@
 package tapoo.metro;
 
-/** Reports violations of metro domain rules. */
+/**
+ * Exception thrown when a metro network operation violates a domain rule.
+ */
 public class InvalidMetroException extends RuntimeException {
-    public InvalidMetroException(String message) { super(message); }
+    /**
+     * Creates an exception with a message describing the violated rule.
+     *
+     * @param message detail message explaining the error
+     */
+    public InvalidMetroException(String message) {
+        super(message);
+    }
 }

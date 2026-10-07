@@ -1,12 +1,26 @@
 package tapoo.metro;
 
-/** Fictitious network; travel times are illustrative. */
+/**
+ * Demonstrates the metro network with a small fictitious data set.
+ *
+ * <p>The travel times used here are illustrative and are intended to exercise
+ * the operations defined by {@link MetroNetwork}.</p>
+ */
 public final class Main {
+    private static final String[] STATIONS = {"Alameda", "Arroios", "Saldanha", "Campo Grande", "Aeroporto"};
+
+
+    /**
+     * Builds a sample network, performs basic queries and reports expected
+     * domain errors.
+     *
+     * @param args command-line arguments, not used
+     */
     public static void main(String[] args) {
         MetroNetwork network = new MetroNetworkImpl();
-        for (String name : new String[]{"Alameda", "Arroios", "Saldanha", "Campo Grande", "Aeroporto"}) {
+        for (String name : STATIONS)
             network.addStation(name);
-        }
+
         network.connectStations("Alameda", "Arroios", 2);
         network.connectStations("Alameda", "Saldanha", 3);
         network.connectStations("Arroios", "Campo Grande", 3);

@@ -5,9 +5,10 @@ Projeto de apoio aos slides `A3.1_Introducao_aos_Grafos_26_27_v3.md`.
 ## Atividade: o que devem fazer
 
 1. Explorem as classes fornecidas e executem `Main`.
-2. Completem **`hasDirectConnection`** em `MetroNetworkImpl` e ativem as chamadas comentadas em `Main`.
-3. Acrescentem **uma única funcionalidade: `directTravelMinutes`**, à interface e à implementação.
-4. Ajustem `Main` para demonstrar os resultados e tratar as exceções indicadas abaixo.
+2. Acrescentem a estação **Roma** e as ligações **Roma–Alameda (4 minutos)** e **Roma–Saldanha (3 minutos)** a `Main` e executem-no novamente.
+3. Completem **`hasDirectConnection`** em `MetroNetworkImpl` e ativem as chamadas comentadas em `Main`.
+4. Acrescentem **uma única funcionalidade: `directTravelMinutes`**, à interface e à implementação.
+5. Ajustem `Main` para demonstrar os resultados e tratar as exceções indicadas abaixo.
 
 Não é pedido o planeamento de outra aplicação nesta atividade.
 
@@ -106,6 +107,32 @@ A rede fornecida contém estas ligações fictícias:
 Aeroporto é uma estação isolada. Existe um ciclo e há um percurso de Alameda a Campo Grande,
 mas estas duas estações não têm ligação direta.
 
+### Alterar a rede e voltar a executar
+
+Após a primeira execução, alterem `Main` para registar **uma nova estação, Roma**,
+e criar estas duas ligações fictícias:
+
+| Nova ligação | Tempo estimado |
+| --- | --- |
+| Roma–Alameda | 4 minutos |
+| Roma–Saldanha | 3 minutos |
+
+Utilizem `addStation` e `connectStations`. Acrescentem estas chamadas **depois das
+ligações iniciais e antes das instruções que apresentam os resultados**. Registem
+Roma antes de criar as suas ligações.
+
+Acrescentem também uma consulta a `neighbouringStations("Roma")` e voltem a executar `Main`.
+
+Verifiquem que:
+
+- O número de estações passa de **5 para 6**.
+- Os vizinhos de Roma são **ALAMEDA** e **SALDANHA**.
+- Os vizinhos de Alameda passam a incluir **ROMA**, além de ARROIOS e SALDANHA.
+- Aeroporto continua isolado.
+
+A ordem dos vizinhos pode variar. A ligação Roma–Saldanha tem o mesmo tempo de
+outras ligações, mas corresponde a um objeto `Connection` distinto.
+
 ## 2. Completar `hasDirectConnection`
 
 Mantenham a assinatura da interface. Validem e localizem os dois vértices antes de usar `areAdjacent`.
@@ -121,7 +148,7 @@ Depois, ativem as três chamadas comentadas em `Main`.
 | Alameda–Alameda | `false`, pois não existem laços |
 | Nome inexistente, vazio ou `null` | `InvalidMetroException` |
 
-## 3. Acrescentar o tempo de uma ligação direta
+## 3. Implementar um método para indicar o tempo de uma ligação direta
 
 Acrescentem a assinatura a `MetroNetwork` e implementem-na em `MetroNetworkImpl`:
 
@@ -151,6 +178,7 @@ individualmente para a execução poder continuar.
 ## Critérios de conclusão
 
 - [ ] O modelo usa `Station` e `Connection`.
+- [ ] `Main` inclui Roma e as duas ligações pedidas; a nova execução confirma 6 estações e os vizinhos esperados.
 - [ ] `hasDirectConnection` está completo e as chamadas correspondentes estão ativas.
 - [ ] `directTravelMinutes` está declarado na interface e implementado na classe.
 - [ ] `Main` demonstra os dois sentidos, normalização dos nomes e todos os casos de erro pedidos.
