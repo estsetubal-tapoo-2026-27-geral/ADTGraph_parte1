@@ -1,63 +1,91 @@
 package tapoo.metro;
 
-
 import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Graph;
 import com.brunomnsilva.smartgraph.graph.GraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Vertex;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-/** Domain operations implemented using the supplied Graph ADT. */
+/** Domain operations implemented using the Graph ADT. */
 public final class MetroNetworkImpl implements MetroNetwork {
-    // Station names are vertex elements; travel times are edge elements.
-    private final Graph<String,Integer> graph = new GraphEdgeList<>();
+    private final Graph<Station, Connection> graph = new GraphEdgeList<>();
 
+    /** Apply the same validation and normalisation in every operation. */
     private String normaliseName(String name) {
-        if (name == null || name.isBlank())
-            throw new IllegalArgumentException("Station name must not be blank");
-        return name.strip();
+        if (name == null || name.trim().isEmpty()) {
+            throw new InvalidMetroException("Invalid station name.");
+        }
+        return name.trim().toUpperCase(Locale.ROOT);
     }
-    // The ADT works with references. Name lookup belongs to this application.
-    private Vertex<String> findStation(String name) {
-        String key = normaliseName(name);
-        for (Vertex<String> vertex : graph.vertices())
-            if (vertex.element().equals(key)) return vertex;
+
+    /** Receives an already validated and normalised name. */
+    private Vertex<Station> findStation(String name) {
+        for (Vertex<Station> vertex : graph.vertices()) {
+            if (vertex.element().getName().equals(name)) {
+                return vertex;
+            }
+        }
         return null;
     }
-    private Vertex<String> requireStation(String name) {
-        Vertex<String> vertex = findStation(name);
-        if (vertex == null) throw new IllegalArgumentException("Unknown station: " + name);
+
+    /** Resolve a name to a vertex or report a domain error. */
+    private Vertex<Station> requireStation(String name) {
+        String normalisedName = normaliseName(name);
+        Vertex<Station> vertex = findStation(normalisedName);
+        if (vertex == null) {
+            throw new InvalidMetroException("Unknown station: " + normalisedName);
+        }
         return vertex;
     }
-    public void addStation(String name) {
-        String key = normaliseName(name);
-        if (findStation(key) != null)
-            throw new IllegalArgumentException("Station already exists: " + key);
-        graph.insertVertex(key);
+
+    @Override
+    public void addStation(String name) throws InvalidMetroException {
+        String normalisedName = normaliseName(name);
+        if (findStation(normalisedName) != null) {
+            throw new InvalidMetroException("Station already exists.");
+        }
+        graph.insertVertex(new Station(normalisedName));
     }
-    public void connectStations(String origin, String destination, int travelMinutes) {
-        if (travelMinutes <= 0)
-            throw new IllegalArgumentException("Travel time must be positive");
-        Vertex<String> first = requireStation(origin);
-        Vertex<String> second = requireStation(destination);
-        if (first == second) throw new IllegalArgumentException("Stations must be different");
-        if (graph.areAdjacent(first, second))
-            throw new IllegalArgumentException("Direct connection already exists");
-        graph.insertEdge(first, second, Integer.valueOf(travelMinutes));
+
+    @Override
+    public void connectStations(String origin, String destination, int travelMinutes)
+            throws InvalidMetroException {
+        Vertex<Station> first = requireStation(origin);
+        Vertex<Station> second = requireStation(destination);
+        if (first == second) {
+            throw new InvalidMetroException("Stations must be different.");
+        }
+        if (travelMinutes <= 0) {
+            throw new InvalidMetroException("Travel time must be positive.");
+        }
+        if (graph.areAdjacent(first, second)) {
+            throw new InvalidMetroException("Direct connection already exists.");
+        }
+        // Create a distinct object for every edge, even when travel times coincide.
+        graph.insertEdge(first, second, new Connection(travelMinutes));
     }
-    public boolean hasDirectConnection(String origin, String destination) {
-        return graph.areAdjacent(requireStation(origin), requireStation(destination));
+
+    @Override
+    public boolean hasDirectConnection(String origin, String destination)
+            throws InvalidMetroException {
+        // TODO: resolve both names and call graph.areAdjacent(...).
+        // Existing stations without an edge must produce false.
+        throw new UnsupportedOperationException("TODO: implement hasDirectConnection.");
     }
-    public Iterable<String> neighbouringStations(String station) {
-        Vertex<String> vertex = requireStation(station);
+
+    @Override
+    public Iterable<String> neighbouringStations(String station) throws InvalidMetroException {
+        Vertex<Station> vertex = requireStation(station);
         List<String> result = new ArrayList<>();
-        for (Edge<Integer,String> edge : graph.incidentEdges(vertex)) {
-            Vertex<String> neighbour = graph.opposite(vertex, edge);
-            result.add(neighbour.element());
+        for (Edge<Connection, Station> edge : graph.incidentEdges(vertex)) {
+            Vertex<Station> neighbour = graph.opposite(vertex, edge);
+            result.add(neighbour.element().getName());
         }
         return result;
     }
+
+    @Override
     public int numberOfStations() { return graph.numVertices(); }
 }
