@@ -92,9 +92,7 @@ public final class MetroNetworkImpl implements MetroNetwork {
     @Override
     public boolean hasDirectConnection(Station origin, Station destination)
             throws InvalidMetroException {
-        Vertex<Station> first = checkStation(origin);
-        Vertex<Station> second = checkStation(destination);
-        return first != second && graph.areAdjacent(first, second);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 

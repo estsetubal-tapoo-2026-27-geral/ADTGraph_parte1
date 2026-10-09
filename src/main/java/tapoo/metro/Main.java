@@ -53,7 +53,7 @@ public final class Main {
 
         // Step 2: add directTravelMinutes to the interface and implementation,
         // activate these calls and add the error cases from README.md.
-        // System.out.println("Alameda - Arroios (min): " + network.directTravelMinutes("Alameda", "Arroios"));
-        // System.out.println("Arroios - Alameda (min): " + network.directTravelMinutes("Arroios", "Alameda"));
+        // System.out.println("Alameda - Arroios (min): " + network.directTravelMinutes(ALAMEDA, ARROIOS));
+        // System.out.println("Arroios - Alameda (min): " + network.directTravelMinutes(new Station("Arroios"), new Station("Alameda")));
     }
 }
