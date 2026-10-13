@@ -32,14 +32,6 @@ Os ficheiros Java estão em `src/main/java/tapoo/metro`.
 
 ## Executar
 
-Abram a pasta que contém `pom.xml` como projeto Maven e executem `tapoo.metro.Main` no IDE.
-Na linha de comandos, a partir dessa pasta:
-
-```bash
-mvn compile exec:java
-```
-
-A primeira execução necessita de acesso à Internet para obter as dependências Maven.
 O projeto inicial compila e executa: as chamadas a métodos ainda por implementar estão comentadas.
 `hasDirectConnection` lança `UnsupportedOperationException` enquanto o TODO não for resolvido.
 
