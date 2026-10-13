@@ -14,9 +14,8 @@ Não é pedido o planeamento de outra aplicação nesta atividade.
 
 ## Ferramentas e ficheiros disponibilizados
 
-- Java 17 ou superior e Maven, ou um IDE com suporte Maven.
+- Java 17 ou superior e Maven
 - Biblioteca SmartGraph 2.2.0, declarada em `pom.xml`; utilizem `Graph`, `Vertex`, `Edge` e `GraphEdgeList`.
-- Podem utilizar `List` e `ArrayList` para reunir os nomes dos vizinhos e `Locale.ROOT` para normalizar nomes obtidos por `Station#getName()`.
 - Não é necessário implementar o ADT Graph ou estudar a sua estrutura interna nesta aula.
 
 | Ficheiro | Responsabilidade | Estado inicial |
@@ -91,7 +90,7 @@ A rede fornecida contém estas ligações fictícias:
 
 | Estações | Minutos |
 | --- | --- |
-| Alameda–Arroios | 2 |
+| Alameda–Arroios | 4 |
 | Alameda–Saldanha | 3 |
 | Arroios–Campo Grande | 3 |
 | Saldanha–Campo Grande | 2 |
@@ -106,7 +105,7 @@ e criar estas duas ligações fictícias:
 
 | Nova ligação | Tempo estimado |
 | --- | --- |
-| Roma–Alameda | 4 minutos |
+| Roma–Alameda | 5 minutos |
 | Roma–Saldanha | 3 minutos |
 
 Utilizem `addStation` e `connectStations`. Acrescentem estas chamadas **depois das
@@ -159,9 +158,8 @@ individualmente para a execução poder continuar.
 
 | Consulta | Resultado esperado |
 | --- | --- |
-| Alameda–Arroios | `2` |
-| Arroios–Alameda | `2` |
-| `new Station(" alameda ")`–`new Station("ARROIOS")` | `2` |
+| Alameda–Arroios | `4` |
+| Arroios–Alameda | `4` |
 | Alameda–Campo Grande | Exceção, mesmo existindo um percurso |
 | Alameda–Aeroporto | Exceção |
 | Estação inexistente, nome vazio ou `null` | Exceção |
